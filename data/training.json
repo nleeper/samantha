@@ -1,0 +1,213 @@
+{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "text": "can I hear something by the chainsmokers",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 24,
+            "end": 40,
+            "value": "the chainsmokers",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "can you play some music by elvis presley?",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 27,
+            "end": 40,
+            "value": "elvis presley",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "lets hear something by elvis",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 23,
+            "end": 28,
+            "value": "elvis",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play me some of the national",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 16,
+            "end": 28,
+            "value": "the national",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play music by the chainsmokers",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 30,
+            "value": "the chainsmokers",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play some beatles",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 10,
+            "end": 17,
+            "value": "beatles",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play some music by chance the rapper",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 19,
+            "end": 36,
+            "value": "chance the rapper",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play some music by tegan and sara",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 19,
+            "end": 33,
+            "value": "tegan and sara",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play some music by tom jones",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 19,
+            "end": 28,
+            "value": "tom jones",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play something by tegan and sara",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 18,
+            "end": 32,
+            "value": "tegan and sara",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play something by the national",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 18,
+            "end": 30,
+            "value": "the national",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play the chainsmokers",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 5,
+            "end": 21,
+            "value": "the chainsmokers",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "lets hear some frank ocean",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 15,
+            "end": 26,
+            "value": "frank ocean",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "lets hear the beatles",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 10,
+            "end": 21,
+            "value": "the beatles",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "tell me what speakers are available?",
+        "intent": "speaker_list",
+        "entities": []
+      },
+      {
+        "text": "what speakers are available?",
+        "intent": "speaker_list",
+        "entities": []
+      },
+      {
+        "text": "what speakers are there?",
+        "intent": "speaker_list",
+        "entities": []
+      },
+      {
+        "text": "what speakers do I have?",
+        "intent": "speaker_list",
+        "entities": []
+      },
+      {
+        "text": "where can I play some music?",
+        "intent": "speaker_list",
+        "entities": []
+      },
+      {
+        "text": "play some elvis",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 10,
+            "end": 15,
+            "value": "elvis",
+            "entity": "artist"
+          }
+        ]
+      }
+    ],
+    "entity_examples": [],
+    "intent_examples": []
+  }
+}
