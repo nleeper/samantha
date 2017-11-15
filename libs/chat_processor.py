@@ -4,16 +4,14 @@ import tornado.queues
 import config
 
 from libs.message_parser import MessageParser
-from libs.actions.converter import ActionConverter
 
 from clients.types import ClientTypes
 from clients.facebook import FacebookMessenger
 
 class ChatProcessor(object):
-    def __init__(self, pipeline_manager):
-        self._pipeline_manager = pipeline_manager
+    def __init__(self, plugin_manager):
+        self._plugin_manager = plugin_manager
 
-        self._action_converter = ActionConverter()
         self._message_parser = MessageParser()
         self._queue = tornado.queues.Queue()
 
@@ -40,16 +38,9 @@ class ChatProcessor(object):
             entries = yield self._queue.get()
             for entry in entries:
                 parsed_message = self._message_parser.parse(entry['message'])
-            
-                action = self._action_converter.convert(parsed_message['intent'], parsed_message['entities'])
-                if action is not None:
-                    response = yield self._pipeline_manager.send_request_response(action['method'], action['params'])
-                    if response['result']['success']:
-                        self.send_response(entry, 'You got it, Nick!')
-                    else:
-                        self.send_response(entry, 'Whoops, I had some troubles handling that. Try again?')
-                else:
-                    self.send_response(entry, 'I don\'t understand. Can you be more clear?')
 
-    def send_response(self, entry, response):
+                response = yield self._plugin_manager.handle(parsed_message['intent'], parsed_message['entities'])
+                self._send_response(entry, response)
+
+    def _send_response(self, entry, response):
         self._clients[entry['client_type']].send_text_message(entry['recipient_id'], response)

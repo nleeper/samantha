@@ -10,7 +10,6 @@ class MessageParser(object):
         response = { 'original': message, 'intent': None, 'entities': [] }
 
         parsed = self._interpreter.parse(message)
-        # print parsed
 
         if parsed['intent'].get('confidence', 0.00) > 0.30:
             response['intent'] = parsed['intent'].get('name', '')

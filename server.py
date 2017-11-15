@@ -11,7 +11,7 @@ if __name__ == '__main__':
     app = WebApplication()
     app.initialize()
 
-    tornado.ioloop.IOLoop.instance().add_callback(app.chat_processor.process)
+    tornado.ioloop.IOLoop.instance().add_callback(app.chat.process)
 
     app.listen(config.PORT)
 
