@@ -1,6 +1,6 @@
 
 class Wemo(object):
-    def __init__(self):
+    def __init__(self, plugin_manager):
         pass
 
     def supported_intents(self):
