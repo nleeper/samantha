@@ -26,7 +26,7 @@
         ]
       },
       {
-        "text": "lets hear something by elvis",
+        "text": "lets hear something by elvis in the office",
         "intent": "play_artist",
         "entities": [
           {
@@ -34,11 +34,17 @@
             "end": 28,
             "value": "elvis",
             "entity": "artist"
+          },
+          {
+            "start": 36,
+            "end": 42,
+            "value": "office",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play me some of the national",
+        "text": "play me some of the national in the living room",
         "intent": "play_artist",
         "entities": [
           {
@@ -46,11 +52,17 @@
             "end": 28,
             "value": "the national",
             "entity": "artist"
+          },
+          {
+            "start": 36,
+            "end": 47,
+            "value": "living room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play music by the chainsmokers",
+        "text": "play music by the chainsmokers in family room",
         "intent": "play_artist",
         "entities": [
           {
@@ -58,23 +70,35 @@
             "end": 30,
             "value": "the chainsmokers",
             "entity": "artist"
+          },
+          {
+            "start": 34,
+            "end": 45,
+            "value": "family room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play some beatles",
+        "text": "in the living room play some beatles",
         "intent": "play_artist",
         "entities": [
           {
-            "start": 10,
-            "end": 17,
+            "start": 29,
+            "end": 36,
             "value": "beatles",
             "entity": "artist"
+          },
+          {
+            "start": 7,
+            "end": 18,
+            "value": "living room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play some music by chance the rapper",
+        "text": "play some music by chance the rapper in the office",
         "intent": "play_artist",
         "entities": [
           {
@@ -82,11 +106,17 @@
             "end": 36,
             "value": "chance the rapper",
             "entity": "artist"
+          },
+          {
+            "start": 44,
+            "end": 50,
+            "value": "office",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play some music by tegan and sara",
+        "text": "play some music by tegan and sara in the family room",
         "intent": "play_artist",
         "entities": [
           {
@@ -94,11 +124,17 @@
             "end": 33,
             "value": "tegan and sara",
             "entity": "artist"
+          },
+          {
+            "start": 41,
+            "end": 52,
+            "value": "family room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "play some music by tom jones",
+        "text": "play some music by tom jones in the office",
         "intent": "play_artist",
         "entities": [
           {
@@ -106,6 +142,12 @@
             "end": 28,
             "value": "tom jones",
             "entity": "artist"
+          },
+          {
+            "start": 36,
+            "end": 42,
+            "value": "office",
+            "entity": "speaker"
           }
         ]
       },
@@ -134,7 +176,7 @@
         ]
       },
       {
-        "text": "play the chainsmokers",
+        "text": "play the chainsmokers in the family room",
         "intent": "play_artist",
         "entities": [
           {
@@ -142,11 +184,17 @@
             "end": 21,
             "value": "the chainsmokers",
             "entity": "artist"
+          },
+          {
+            "start": 29,
+            "end": 40,
+            "value": "family room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "lets hear some frank ocean",
+        "text": "lets hear some frank ocean in the living room",
         "intent": "play_artist",
         "entities": [
           {
@@ -154,11 +202,17 @@
             "end": 26,
             "value": "frank ocean",
             "entity": "artist"
+          },
+          {
+            "start": 34,
+            "end": 45,
+            "value": "living room",
+            "entity": "speaker"
           }
         ]
       },
       {
-        "text": "lets hear the beatles",
+        "text": "lets hear the beatles in the office",
         "intent": "play_artist",
         "entities": [
           {
@@ -166,6 +220,12 @@
             "end": 21,
             "value": "the beatles",
             "entity": "artist"
+          },
+          {
+            "start": 29,
+            "end": 35,
+            "value": "office",
+            "entity": "speaker"
           }
         ]
       },
