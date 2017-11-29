@@ -5,7 +5,7 @@ class PipelineHandler(WebSocketHandler):
         self.application.pipeline.set_connection(self)
         
         # Let the pipeline know we are open and ready
-        self.application.pipeline.send_notification("connect")
+        self.application.pipeline.send_notification("registered")
 
     def on_message(self, message):        
         self.application.pipeline.handle_message(message)
