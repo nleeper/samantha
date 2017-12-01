@@ -25,6 +25,7 @@ Jinja2==2.9.6
 jmespath==0.9.3
 jsonschema==2.6.0
 MarkupSafe==1.0
+mitie==0.2.0
 murmurhash==0.26.4
 numpy==1.12.1
 packaging==16.8

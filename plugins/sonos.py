@@ -2,40 +2,54 @@ import json
 
 import tornado.gen
 
-class Sonos(object):
-    def __init__(self, manager):
-        self._manager = manager 
-        self._intent_map = { 'play_artist': 'sonos.play_artist', 'speaker_list': 'sonos.speakers' }
+from base import BasePlugin
 
-    def supported_intents(self):
-        return list(self._intent_map.keys())
+class Sonos(BasePlugin):
+    def __init__(self, manager):
+        BasePlugin.__init__(self, manager)
+
+        self._intent_map = { 'play_genre': 'sonos.play_genre', 'play_artist': 'sonos.play_artist', 'speaker_list': 'sonos.speakers' }
     
     @tornado.gen.coroutine
     def handle(self, intent, entities):
         method = self._to_method(intent)
         params = self._to_params(entities)
 
-        response = yield self._manager.pipeline.send_request_response(method, params)
-        raise tornado.gen.Return(self._process_response(method, response))
+        if method == 'sonos.play_artist':
+            response = self._play_artist(params)
+        elif method == 'sonos.play_genre':
+            response = self._play_genre(params)
+        elif method == 'sonos.speakers':
+            response = self._get_speakers()
 
-    def _process_response(self, method, response):
-        if response['error'] is None:
-            result = response['result']
-            if result['success'] is True:
-                if method == 'sonos.speakers':
-                    speakers = ', '.join([v['name'] for k, v in result['speakers'].iteritems()])
-                    return 'I found these speakers: %s' % speakers
-                elif method == 'sonos.play_artist':
-                    return 'Your artist is playing. Enjoy!'
-                else:
-                    return "I'm not sure what you wanted me to do"
-            else:
-                return 'Sorry, an unknown error occurred'
+        return response
+
+    def _play_genre(self, params):
+        raise tornado.gen.Return({ 'message': 'Playing some genre', 'type': 'response' })
+
+    def _play_artist(self, params):
+        if not 'artist' in params:
+            raise tornado.gen.Return(self._build_response('I don\'t know what artist you want me to play. Try again?', True))
+        
+        if not 'speaker' in params:
+            raise tornado.gen.Return(self._build_question('What speaker do you want me to play music on?', 'speaker'))
+
+        response = yield self._request('sonos.play_artist', params)
+
+        result = response['result']
+        if result['success'] is True:
+            answer = 'Your artist is playing. Enjoy!'
         else:
-            return response['error']
+            answer = 'I couldn\'t play the artist you wanted. Sorry!'
 
-    def _to_method(self, intent):
-        return self._intent_map[intent]
+        raise tornado.gen.Return(self._build_response(answer))
 
-    def _to_params(self, entities):
-        return {e['entity']: e['value'] for e in entities}
+    def _get_speakers(self):
+        response = yield self._request('sonos.speakers', {})
+
+        result = response['result']
+        if result['success'] is True:
+            speakers = ', '.join([v['name'] for k, v in result['speakers'].iteritems()])
+            raise tornado.gen.Return(self._build_response('I found these speakers: %s' % speakers))
+        else:
+            raise tornado.gen.Return(self._build_response('Sorry, I couldn\'t find any speakers!', True))

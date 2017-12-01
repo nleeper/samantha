@@ -2,7 +2,7 @@
   "rasa_nlu_data": {
     "common_examples": [
       {
-        "text": "can I hear something by the chainsmokers",
+        "text": "can I hear something by the chainsmokers?",
         "intent": "play_artist",
         "entities": [
           {
@@ -44,24 +44,6 @@
         ]
       },
       {
-        "text": "play me some of the national in the living room",
-        "intent": "play_artist",
-        "entities": [
-          {
-            "start": 16,
-            "end": 28,
-            "value": "the national",
-            "entity": "artist"
-          },
-          {
-            "start": 36,
-            "end": 47,
-            "value": "living room",
-            "entity": "speaker"
-          }
-        ]
-      },
-      {
         "text": "play music by the chainsmokers in family room",
         "intent": "play_artist",
         "entities": [
@@ -80,20 +62,20 @@
         ]
       },
       {
-        "text": "in the living room play some beatles",
+        "text": "in the living room play something by the beatles",
         "intent": "play_artist",
         "entities": [
-          {
-            "start": 29,
-            "end": 36,
-            "value": "beatles",
-            "entity": "artist"
-          },
           {
             "start": 7,
             "end": 18,
             "value": "living room",
             "entity": "speaker"
+          },
+          {
+            "start": 37,
+            "end": 48,
+            "value": "the beatles",
+            "entity": "artist"
           }
         ]
       },
@@ -176,55 +158,19 @@
         ]
       },
       {
-        "text": "play the chainsmokers in the family room",
+        "text": "play artist the chainsmokers in the family room",
         "intent": "play_artist",
         "entities": [
           {
-            "start": 5,
-            "end": 21,
+            "start": 12,
+            "end": 28,
             "value": "the chainsmokers",
             "entity": "artist"
           },
           {
-            "start": 29,
-            "end": 40,
+            "start": 36,
+            "end": 47,
             "value": "family room",
-            "entity": "speaker"
-          }
-        ]
-      },
-      {
-        "text": "lets hear some frank ocean in the living room",
-        "intent": "play_artist",
-        "entities": [
-          {
-            "start": 15,
-            "end": 26,
-            "value": "frank ocean",
-            "entity": "artist"
-          },
-          {
-            "start": 34,
-            "end": 45,
-            "value": "living room",
-            "entity": "speaker"
-          }
-        ]
-      },
-      {
-        "text": "lets hear the beatles in the office",
-        "intent": "play_artist",
-        "entities": [
-          {
-            "start": 10,
-            "end": 21,
-            "value": "the beatles",
-            "entity": "artist"
-          },
-          {
-            "start": 29,
-            "end": 35,
-            "value": "office",
             "entity": "speaker"
           }
         ]
@@ -255,13 +201,259 @@
         "entities": []
       },
       {
-        "text": "play some elvis",
+        "text": "play artist chainsmokers",
         "intent": "play_artist",
         "entities": [
           {
-            "start": 10,
+            "start": 12,
+            "end": 24,
+            "value": "chainsmokers",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play artist tegan and sara",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 12,
+            "end": 26,
+            "value": "tegan and sara",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play genre holiday",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 11,
+            "end": 18,
+            "value": "holiday",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play genre christmas music",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 11,
+            "end": 26,
+            "value": "christmas music",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play jazz music",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 9,
+            "value": "jazz",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play country music",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 12,
+            "value": "country",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play christmas music",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 14,
+            "value": "christmas",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play jazz music in the office",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 9,
+            "value": "jazz",
+            "entity": "genre"
+          },
+          {
+            "start": 23,
+            "end": 29,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play christmas music in the living room",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 14,
+            "value": "christmas",
+            "entity": "genre"
+          },
+          {
+            "start": 28,
+            "end": 39,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play country music in the family room",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 12,
+            "value": "country",
+            "entity": "genre"
+          },
+          {
+            "start": 26,
+            "end": 37,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play jazz on the kitchen speaker",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 5,
+            "end": 9,
+            "value": "jazz",
+            "entity": "genre"
+          },
+          {
+            "start": 17,
+            "end": 24,
+            "value": "kitchen",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play toto on the office speaker",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 5,
+            "end": 9,
+            "value": "toto",
+            "entity": "artist"
+          },
+          {
+            "start": 17,
+            "end": 23,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "can i hear artist hold steady on the living room speaker?",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 18,
+            "end": 29,
+            "value": "hold steady",
+            "entity": "artist"
+          },
+          {
+            "start": 37,
+            "end": 48,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play genre pop",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 11,
+            "end": 14,
+            "value": "pop",
+            "entity": "genre"
+          }
+        ]
+      },
+      {
+        "text": "play genre jazz in the kitchen",
+        "intent": "play_genre",
+        "entities": [
+          {
+            "start": 11,
             "end": 15,
+            "value": "jazz",
+            "entity": "genre"
+          },
+          {
+            "start": 23,
+            "end": 30,
+            "value": "kitchen",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play artist elvis",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 12,
+            "end": 17,
             "value": "elvis",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play artist bruno mars",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 12,
+            "end": 22,
+            "value": "bruno mars",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play artist fleetwood mac",
+        "intent": "play_artist",
+        "entities": [
+          {
+            "start": 12,
+            "end": 25,
+            "value": "fleetwood mac",
             "entity": "artist"
           }
         ]
