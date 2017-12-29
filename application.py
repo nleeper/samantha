@@ -21,7 +21,7 @@ class WebApplication(tornado.web.Application):
         tornado.web.Application.__init__(self, routes_handlers)
 
     def initialize(self):
-        self.chat.initialize()
+        self.chat_processor.initialize()
 
     @property
     def pipeline(self):
@@ -32,5 +32,5 @@ class WebApplication(tornado.web.Application):
         return self._plugin_manager
 
     @property
-    def chat(self):
+    def chat_processor(self):
         return self._chat_processor

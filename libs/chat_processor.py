@@ -1,3 +1,5 @@
+import hashlib
+
 import tornado.gen
 import tornado.queues
 
@@ -18,6 +20,8 @@ class ChatProcessor(object):
         self._clients = dict()
         self._clients[ClientTypes.FACEBOOK] = FacebookMessenger(config.FACEBOOK)
 
+        self._pending_questions = {}
+
     def initialize(self):
         for k in self._clients:
             self._clients[k].subscribe()
@@ -37,10 +41,30 @@ class ChatProcessor(object):
         while True:
             entries = yield self._queue.get()
             for entry in entries:
-                parsed_message = self._message_parser.parse(entry['message'])
+                conversation_id = self._build_conversation_id(entry)
 
-                response = yield self._plugin_manager.handle(parsed_message['intent'], parsed_message['entities'])
-                self._send_response(entry, response)
+                if conversation_id in self._pending_questions:
+                    question = self._pending_questions[conversation_id]
+                    del self._pending_questions[conversation_id]
+
+                    intent = question['intent']
+                    entities = question['entities']
+
+                    entities.append({ 'entity': question['question_entity'], 'value': entry['message'] })
+                else:
+                    parsed_message = self._message_parser.parse(entry['message'])
+
+                    intent = parsed_message['intent']
+                    entities = parsed_message['entities']
+
+                response = yield self._plugin_manager.handle(intent, entities)
+                if response['type'] == 'question':
+                    self._pending_questions[conversation_id] = { 'intent': intent, 'entities': entities, 'question_entity': response['question_entity'] }
+
+                self._send_response(entry, response['message'])
 
     def _send_response(self, entry, response):
         self._clients[entry['client_type']].send_text_message(entry['recipient_id'], response)
+
+    def _build_conversation_id(self, entry):
+        return hashlib.sha256('%s-%s' % (entry['client_type'], entry['recipient_id'])).hexdigest()

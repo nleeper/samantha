@@ -90,4 +90,6 @@ ENV/
 
 .vscode
 
+logs/
 models/
+data/*.dat

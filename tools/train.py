@@ -1,11 +1,15 @@
 import os
+import sys
 import shutil
+sys.path.append(os.getcwd())
 
 from rasa_nlu.converters import load_data
 from rasa_nlu.config import RasaNLUConfig
 from rasa_nlu.model import Trainer
 
-rasa_config = RasaNLUConfig('config_spacy.json')
+import config
+
+rasa_config = RasaNLUConfig(config.NLU_CONFIG)
 
 print 'Training new model from data %s' % rasa_config.data
 training_data = load_data(rasa_config.data)
