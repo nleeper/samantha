@@ -19,6 +19,10 @@ class FacebookMessenger(object):
     def send_text_message(self, recipient_id, message):
         return self._send_message(recipient_id, { 'text': message })
 
+    def send_choices_message(self, recipient_id, message, choices):
+        quick_replies = [{ 'content_type': 'text', 'title': c['title'], 'payload': c['key'] } for c in choices]
+        return self._send_message(recipient_id, { 'text': message, 'quick_replies': quick_replies })
+
     def _send_message(self, recipient_id, message, notification_type = 'REGULAR'):
         request_endpoint = '{0}/me/messages'.format(self._graph_url)
         

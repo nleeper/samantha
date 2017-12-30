@@ -15,8 +15,11 @@ class BasePlugin(object):
     def _to_params(self, entities):
         return {e['entity']: e['value'] for e in entities}
     
-    def _build_question(self, question, entity):
-        return { 'message': question, 'type': 'question', 'question_entity': entity }
+    def _build_question(self, question, entity, choices=[]):
+        question = { 'message': question, 'type': 'question', 'question_entity': entity } 
+        if len(choices) > 0:
+            question['choices'] = choices
+        return question
 
     def _build_response(self, message, is_error = False):
         return { 'message': message, 'type': 'error' if is_error else 'response' }
