@@ -60,11 +60,18 @@ class ChatProcessor(object):
                 response = yield self._plugin_manager.handle(intent, entities)
                 if response['type'] == 'question':
                     self._pending_questions[conversation_id] = { 'intent': intent, 'entities': entities, 'question_entity': response['question_entity'] }
-
+                    
+                    if 'choices' in response:
+                        self._send_choices_response(entry, response['message'], response['choices'])
+                        continue
+                
                 self._send_response(entry, response['message'])
 
     def _send_response(self, entry, response):
         self._clients[entry['client_type']].send_text_message(entry['recipient_id'], response)
+
+    def _send_choices_response(self, entry, response, choices):
+        self._clients[entry['client_type']].send_choices_message(entry['recipient_id'], response, choices)
 
     def _build_conversation_id(self, entry):
         return hashlib.sha256('%s-%s' % (entry['client_type'], entry['recipient_id'])).hexdigest()

@@ -1,6 +1,6 @@
 import json
 
-import tornado.gen
+from tornado.gen import coroutine, Return
 
 from base import BasePlugin
 
@@ -10,7 +10,7 @@ class Sonos(BasePlugin):
 
         self._intent_map = { 'play_genre': 'sonos.play_genre', 'play_artist': 'sonos.play_artist', 'speaker_list': 'sonos.speakers' }
     
-    @tornado.gen.coroutine
+    @coroutine
     def handle(self, intent, entities):
         method = self._to_method(intent)
         params = self._to_params(entities)
@@ -25,14 +25,16 @@ class Sonos(BasePlugin):
         return response
 
     def _play_genre(self, params):
-        raise tornado.gen.Return({ 'message': 'Playing some genre', 'type': 'response' })
+        raise Return({ 'message': 'Playing some genre', 'type': 'response' })
 
     def _play_artist(self, params):
         if not 'artist' in params:
-            raise tornado.gen.Return(self._build_response('I don\'t know what artist you want me to play. Try again?', True))
+            raise Return(self._build_response('I don\'t know what artist you want me to play. Try again?', True))
         
         if not 'speaker' in params:
-            raise tornado.gen.Return(self._build_question('What speaker do you want me to play music on?', 'speaker'))
+            speakers = yield self._speaker_list()
+            choices = [{ 'title': v['name'], 'key': v['name'] } for k, v in speakers.iteritems()]
+            raise Return(self._build_question('What speaker do you want me to play music on?', 'speaker', choices=choices))
 
         response = yield self._request('sonos.play_artist', params)
 
@@ -42,14 +44,22 @@ class Sonos(BasePlugin):
         else:
             answer = 'I couldn\'t play the artist you wanted. Sorry!'
 
-        raise tornado.gen.Return(self._build_response(answer))
+        raise Return(self._build_response(answer))
 
     def _get_speakers(self):
+        speakers = yield self._speaker_list()
+        if len(speakers) > 0:
+            speaker_list = ', '.join([v['name'] for k, v in speakers.iteritems()])
+            raise Return(self._build_response('I found these speakers: %s' % speaker_list))
+        else:
+            raise Return(self._build_response('Sorry, I couldn\'t find any speakers!', True))
+
+    @coroutine
+    def _speaker_list(self):
         response = yield self._request('sonos.speakers', {})
 
         result = response['result']
         if result['success'] is True:
-            speakers = ', '.join([v['name'] for k, v in result['speakers'].iteritems()])
-            raise tornado.gen.Return(self._build_response('I found these speakers: %s' % speakers))
+            raise Return(result['speakers'])
         else:
-            raise tornado.gen.Return(self._build_response('Sorry, I couldn\'t find any speakers!', True))
+            raise Return([])
