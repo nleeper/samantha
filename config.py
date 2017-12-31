@@ -12,3 +12,8 @@ FACEBOOK = {
     'VERIFY_TOKEN': config('FB_VERIFY_TOKEN', default=''),
     'VALID_SENDER_IDS': config('FB_VALID_SENDER_IDS', default='', cast=Csv())
 }
+
+SPOTIFY = {
+    'CLIENT_ID': config('SPOTIFY_CLIENT_ID', default=''),
+    'CLIENT_SECRET': config('SPOTIFY_CLIENT_SECRET', default='')
+}

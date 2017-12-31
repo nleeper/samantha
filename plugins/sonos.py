@@ -1,6 +1,9 @@
 import json
+import spotipy
+import config
 
 from tornado.gen import coroutine, Return
+from spotipy.oauth2 import SpotifyClientCredentials
 
 from base import BasePlugin
 
@@ -8,6 +11,9 @@ class Sonos(BasePlugin):
     def __init__(self, manager):
         BasePlugin.__init__(self, manager)
 
+        self._spotify = spotipy.Spotify(client_credentials_manager=
+                                        SpotifyClientCredentials(client_id=config.SPOTIFY.get('CLIENT_ID'), 
+                                                                 client_secret=config.SPOTIFY.get('CLIENT_SECRET')))
         self._intent_map = { 'play_genre': 'sonos.play_genre', 'play_artist': 'sonos.play_artist', 'speaker_list': 'sonos.speakers' }
     
     @coroutine
@@ -33,23 +39,33 @@ class Sonos(BasePlugin):
         
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
-            choices = [{ 'title': v['name'], 'key': v['name'] } for k, v in speakers.iteritems()]
+            choices = [{ 'key': s['name'], 'value': s['name'] } for s in speakers]
             raise Return(self._build_question('What speaker do you want me to play music on?', 'speaker', choices=choices))
 
-        response = yield self._request('sonos.play_artist', params)
+        artist = params['artist']
+        del params['artist']
 
-        result = response['result']
-        if result['success'] is True:
-            answer = 'Your artist is playing. Enjoy!'
+        found = self._spotify.search(artist, limit=10, type='artist', market='US')
+        if found['artists']['total'] > 0:
+            match = found['artists']['items'][0]
+            params['uri'] = 'spotify:artistTopTracks:%s' % match['id']
+
+            response = yield self._request('sonos.play_spotify', params)
+            
+            result = response['result']
+            if result['success'] is True:
+                answer = 'Your artist is playing. Enjoy!'
+            else:
+                answer = 'I couldn\'t play the artist you wanted. Sorry!'
         else:
-            answer = 'I couldn\'t play the artist you wanted. Sorry!'
+            answer = 'I couldn\'t find the artist %s. Try again?' % artist
 
         raise Return(self._build_response(answer))
 
     def _get_speakers(self):
         speakers = yield self._speaker_list()
         if len(speakers) > 0:
-            speaker_list = ', '.join([v['name'] for k, v in speakers.iteritems()])
+            speaker_list = ', '.join([s['name'] for s in speakers])
             raise Return(self._build_response('I found these speakers: %s' % speaker_list))
         else:
             raise Return(self._build_response('Sorry, I couldn\'t find any speakers!', True))
