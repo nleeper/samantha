@@ -1,6 +1,7 @@
 import json
 import spotipy
 import config
+import random
 
 from tornado.gen import coroutine, Return
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -31,7 +32,37 @@ class Sonos(BasePlugin):
         return response
 
     def _play_genre(self, params):
-        raise Return({ 'message': 'Playing some genre', 'type': 'response' })
+        if not 'genre' in params:
+            raise Return(self._build_response('I don\'t know what genre you want me to play. Ask again?', True))
+
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            choices = [{ 'key': s['name'], 'value': s['name'] } for s in speakers]
+            raise Return(self._build_question('What speaker do you want me to play music on?', 'speaker', choices=choices))
+
+        genre = params['genre']
+        del params['genre']
+
+        found = self._spotify.search(genre, limit=50, type='playlist', market='US')
+        if found['playlists']['total'] > 0:
+            count = len(found['playlists']['items'])
+            item_no = random.randint(0, count - 1)
+
+            match = found['playlists']['items'][item_no]
+            params['uri'] = match['uri']
+
+            response = yield self._request('sonos.play_spotify', params)
+
+            result = response['result']
+            if result['success'] is True:
+                answer = 'The playlist \'%s\' is now playing. Hope you like it!' % match['name']
+            else:
+                answer = 'I couldn\'t play the genre you wanted. Sorry!'
+        else:
+            answer = 'I couldn\'t find any playlists for genre %s. Try again?' % genre
+
+        raise Return(self._build_response(answer))
+
 
     def _play_artist(self, params):
         if not 'artist' in params:
