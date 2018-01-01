@@ -176,7 +176,7 @@
         ]
       },
       {
-        "text": "tell me what speakers are available?",
+        "text": "tell me what speakers are available",
         "intent": "speaker_list",
         "entities": []
       },
@@ -455,6 +455,243 @@
             "end": 25,
             "value": "fleetwood mac",
             "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "stop playing music in the office",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 26,
+            "end": 32,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "pause music in the living room",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 19,
+            "end": 30,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "pause music in the office",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 19,
+            "end": 25,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "stop playing music in the family room",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 26,
+            "end": 37,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "stop playing music",
+        "intent": "pause_music",
+        "entities": []
+      },
+      {
+        "text": "pause music",
+        "intent": "pause_music",
+        "entities": []
+      },
+      {
+        "text": "resume playing music",
+        "intent": "resume_music",
+        "entities": []
+      },
+      {
+        "text": "play music again in the family room",
+        "intent": "resume_music",
+        "entities": [
+          {
+            "start": 24,
+            "end": 35,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "start playing music in office",
+        "intent": "resume_music",
+        "entities": [
+          {
+            "start": 23,
+            "end": 29,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "resume music in the family room",
+        "intent": "resume_music",
+        "entities": [
+          {
+            "start": 20,
+            "end": 31,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "unpause music in living room",
+        "intent": "resume_music",
+        "entities": [
+          {
+            "start": 17,
+            "end": 28,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "unpause music",
+        "intent": "resume_music",
+        "entities": []
+      },
+      {
+        "text": "resume music",
+        "intent": "resume_music",
+        "entities": []
+      },
+      {
+        "text": "resume music in the office",
+        "intent": "resume_music",
+        "entities": [
+          {
+            "start": 20,
+            "end": 26,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "pause music in family room",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 15,
+            "end": 26,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "stop music in the office",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 18,
+            "end": 24,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "stop music in family room",
+        "intent": "pause_music",
+        "entities": [
+          {
+            "start": 14,
+            "end": 25,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "skip this song",
+        "intent": "skip_track",
+        "entities": []
+      },
+      {
+        "text": "play next song",
+        "intent": "skip_track",
+        "entities": []
+      },
+      {
+        "text": "skip this track",
+        "intent": "skip_track",
+        "entities": []
+      },
+      {
+        "text": "play next track",
+        "intent": "skip_track",
+        "entities": []
+      },
+      {
+        "text": "play next song in the office",
+        "intent": "skip_track",
+        "entities": [
+          {
+            "start": 22,
+            "end": 28,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "skip this song in family room",
+        "intent": "skip_track",
+        "entities": [
+          {
+            "start": 18,
+            "end": 29,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "skip song in office",
+        "intent": "skip_track",
+        "entities": [
+          {
+            "start": 13,
+            "end": 19,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "skip this track in the living room",
+        "intent": "skip_track",
+        "entities": [
+          {
+            "start": 23,
+            "end": 34,
+            "value": "living room",
+            "entity": "speaker"
           }
         ]
       }
