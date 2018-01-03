@@ -22,60 +22,13 @@ class Sonos(BasePlugin):
                              'pause_music': self._pause,
                              'resume_music': self._resume,
                              'skip_track': self._skip_track,
-                             'play_album': self._play_album }
+                             'play_album': self._play_album,
+                             'play_track': self._play_track }
     
     @coroutine
     def handle(self, intent, entities):
         params = self._to_params(entities)
         return self._intent_map[intent](params)
-
-    def _play_album(self, params):
-        if not 'album' in params:
-            raise Return(self._build_response('I don\'t know what album you want me to play. Ask again?', True))
-
-        if not 'artist' in params:
-            raise Return(self._build_response('You need to tell me which artist made this album so I cand find it for you.', True))
-
-        album = params['album']
-        del params['album']
-
-        artist = params['artist']
-        del params['artist']
-
-        if not 'speaker' in params:
-            speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % album.title(), speakers))
-
-        found_albums = self._spotify.search(album, limit=10, type='album', market='US')
-        if found_albums['albums']['total'] > 0:
-            match = None
-
-            found_artists = self._spotify.search(artist, limit=10, type='artist', market='US')
-            if found_artists['artists']['total'] > 0:
-                artist_id = found_artists['artists']['items'][0]['id']
-
-                for al in found_albums['albums']['items']:
-                    for ar in al['artists']:
-                        if ar['id'] == artist_id:
-                            match = al
-                            break
-
-            if match is None:
-                match = found_albums['albums']['items'][0]
-
-            params['uri'] = match['uri']
-
-            response = yield self._request('sonos.play_spotify', params)
-
-            result = response['result']
-            if result['success'] is True:
-                answer = 'Your album %s is playing. Enjoy!' % album.title()
-            else:
-                answer = 'I couldn\'t play the album you wanted. Sorry!'
-        else:
-            answer = 'I couldn\'t find the album %s by artist %s. Try again?' % (album.title(), artist.title())
-
-        raise Return(self._build_response(answer))
 
     def _skip_track(self, params):
         if not 'speaker' in params:
@@ -153,6 +106,74 @@ class Sonos(BasePlugin):
 
         raise Return(self._build_response(answer))
 
+    def _play_album(self, params):
+        if not 'album' in params:
+            raise Return(self._build_response('I don\'t know what album you want me to play. Ask again?', True))
+
+        if not 'artist' in params:
+            raise Return(self._build_response('You need to tell me which artist made this album so I cand find it for you.', True))
+
+        album = params['album']
+        del params['album']
+
+        artist = params['artist']
+        del params['artist']
+
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % album.title(), speakers))
+
+        found = self._spotify.search('album:%s artist:%s' % (album, artist), limit=10, type='album', market='us')
+        if found['albums']['total'] > 0:
+            match = found['albums']['items'][0]
+            params['uri'] = match['uri']
+
+            response = yield self._request('sonos.play_spotify', params)
+
+            result = response['result']
+            if result['success'] is True:
+                answer = 'Your album %s is playing. Enjoy!' % match['name']
+            else:
+                answer = 'I couldn\'t play the album you wanted. Sorry!'
+        else:
+            answer = 'I couldn\'t find the album %s by artist %s. Try again?' % (album.title(), artist.title())
+
+        raise Return(self._build_response(answer))
+
+    def _play_track(self, params):
+        if not 'track' in params:
+            raise Return(self._build_response('I don\'t know what song you want me to play. Ask again?', True))
+
+        if not 'artist' in params:
+            raise Return(self._build_response('You need to tell me which artist made this song so I cand find it for you.', True))
+
+        track = params['track']
+        del params['track']
+
+        artist = params['artist']
+        del params['artist']
+
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % track.title(), speakers))
+
+        found = self._spotify.search('track:%s artist:%s' % (track, artist), limit=10, type='track', market='us')
+        if found['tracks']['total'] > 0:
+            match = found['tracks']['items'][0]
+            params['uri'] = match['uri']
+
+            response = yield self._request('sonos.play_spotify', params)
+
+            result = response['result']
+            if result['success'] is True:
+                answer = 'Your song %s is playing. Enjoy!' % match['name']
+            else:
+                answer = 'I couldn\'t play the song you wanted. Sorry!'
+        else:
+            answer = 'I couldn\'t find the song %s by artist %s. Try again?' % (track.title(), artist.title())
+
+        raise Return(self._build_response(answer))
+
     def _play_artist(self, params):
         if not 'artist' in params:
             raise Return(self._build_response('I don\'t know what artist you want me to play. Try again?', True))
@@ -173,7 +194,7 @@ class Sonos(BasePlugin):
             
             result = response['result']
             if result['success'] is True:
-                answer = 'Songs by artist %s is playing. Enjoy!' % artist.title()
+                answer = 'Songs by artist %s is playing. Enjoy!' % match['name']
             else:
                 answer = 'I couldn\'t play the artist you wanted. Sorry!'
         else:

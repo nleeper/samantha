@@ -237,18 +237,6 @@
         ]
       },
       {
-        "text": "play genre christmas music",
-        "intent": "play_genre",
-        "entities": [
-          {
-            "start": 11,
-            "end": 26,
-            "value": "christmas music",
-            "entity": "genre"
-          }
-        ]
-      },
-      {
         "text": "play jazz music",
         "intent": "play_genre",
         "entities": [
@@ -925,6 +913,270 @@
             "start": 31,
             "end": 44,
             "value": "elvis presley",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play the song rehab by amy winehouse",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 14,
+            "end": 19,
+            "value": "rehab",
+            "entity": "track"
+          },
+          {
+            "start": 23,
+            "end": 36,
+            "value": "amy winehouse",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play song valerie by artist amy winehouse in office",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 10,
+            "end": 17,
+            "value": "valerie",
+            "entity": "track"
+          },
+          {
+            "start": 28,
+            "end": 41,
+            "value": "amy winehouse",
+            "entity": "artist"
+          },
+          {
+            "start": 45,
+            "end": 51,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play track say my name by destiny's child",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 11,
+            "end": 22,
+            "value": "say my name",
+            "entity": "track"
+          },
+          {
+            "start": 26,
+            "end": 41,
+            "value": "destiny's child",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play song hands down by artist dashboard confessional in the living room",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 10,
+            "end": 20,
+            "value": "hands down",
+            "entity": "track"
+          },
+          {
+            "start": 31,
+            "end": 53,
+            "value": "dashboard confessional",
+            "entity": "artist"
+          },
+          {
+            "start": 61,
+            "end": 72,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play the song closer by the chainsmokers in family room",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 14,
+            "end": 20,
+            "value": "closer",
+            "entity": "track"
+          },
+          {
+            "start": 24,
+            "end": 40,
+            "value": "the chainsmokers",
+            "entity": "artist"
+          },
+          {
+            "start": 44,
+            "end": 55,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play song 24K magic by bruno mars",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 10,
+            "end": 19,
+            "value": "24K magic",
+            "entity": "track"
+          },
+          {
+            "start": 23,
+            "end": 33,
+            "value": "bruno mars",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play the track shape of you by artist ed sheeran in the family room",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 15,
+            "end": 27,
+            "value": "shape of you",
+            "entity": "track"
+          },
+          {
+            "start": 38,
+            "end": 48,
+            "value": "ed sheeran",
+            "entity": "artist"
+          },
+          {
+            "start": 56,
+            "end": 67,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "can i hear the song starving by hailee steinfeld in the office?",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 20,
+            "end": 28,
+            "value": "starving",
+            "entity": "track"
+          },
+          {
+            "start": 32,
+            "end": 48,
+            "value": "hailee steinfeld",
+            "entity": "artist"
+          },
+          {
+            "start": 56,
+            "end": 62,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "let's hear the song all the wine by the national",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 20,
+            "end": 32,
+            "value": "all the wine",
+            "entity": "track"
+          },
+          {
+            "start": 36,
+            "end": 48,
+            "value": "the national",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play the song one call away by charlie puth",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 14,
+            "end": 27,
+            "value": "one call away",
+            "entity": "track"
+          },
+          {
+            "start": 31,
+            "end": 43,
+            "value": "charlie puth",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play track hello by artist adele",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 11,
+            "end": 16,
+            "value": "hello",
+            "entity": "track"
+          },
+          {
+            "start": 27,
+            "end": 32,
+            "value": "adele",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play song hooked on a feeling by artist blue swede",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 10,
+            "end": 29,
+            "value": "hooked on a feeling",
+            "entity": "track"
+          },
+          {
+            "start": 40,
+            "end": 50,
+            "value": "blue swede",
+            "entity": "artist"
+          }
+        ]
+      },
+      {
+        "text": "play song all of the lights by artist kanye west",
+        "intent": "play_track",
+        "entities": [
+          {
+            "start": 10,
+            "end": 27,
+            "value": "all of the lights",
+            "entity": "track"
+          },
+          {
+            "start": 38,
+            "end": 48,
+            "value": "kanye west",
             "entity": "artist"
           }
         ]
