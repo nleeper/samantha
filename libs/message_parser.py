@@ -12,9 +12,11 @@ class MessageParser(object):
         self._interpreter = Interpreter.load(self._metadata, RasaNLUConfig(config.NLU_CONFIG))
 
     def parse(self, message):
-        response = { 'original': message, 'intent': None, 'entities': [] }
+        trimmed = message.strip().lower()
 
-        parsed = self._interpreter.parse(message)
+        response = { 'original': trimmed, 'intent': None, 'entities': [] }
+
+        parsed = self._interpreter.parse(trimmed)
         if parsed['intent'].get('confidence', 0.00) > 0.40:
             response['intent'] = parsed['intent'].get('name', '')
 
@@ -22,7 +24,7 @@ class MessageParser(object):
                 for e in parsed['entities']:
                     response['entities'].append({ 'value': e['value'], 'entity': e['entity'] })
 
-        self._log(message, parsed)
+        self._log(trimmed, parsed)
 
         return response
 
