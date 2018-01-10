@@ -1180,6 +1180,228 @@
             "entity": "artist"
           }
         ]
+      },
+      {
+        "text": "turn volume up in living room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 18,
+            "end": 29,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume down in family room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 16,
+            "value": "down",
+            "entity": "direction"
+          },
+          {
+            "start": 20,
+            "end": 31,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up in the office",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 22,
+            "end": 28,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume down in the living room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 16,
+            "value": "down",
+            "entity": "direction"
+          },
+          {
+            "start": 24,
+            "end": 35,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up a little in office",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 27,
+            "end": 33,
+            "value": "office",
+            "entity": "speaker"
+          },
+          {
+            "start": 17,
+            "end": 23,
+            "value": "little",
+            "entity": "amount"
+          }
+        ]
+      },
+      {
+        "text": "turn volume down a lot in the living room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 16,
+            "value": "down",
+            "entity": "direction"
+          },
+          {
+            "start": 19,
+            "end": 22,
+            "value": "lot",
+            "entity": "amount"
+          },
+          {
+            "start": 30,
+            "end": 41,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up a bit in the family room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 17,
+            "end": 20,
+            "value": "bit",
+            "entity": "amount"
+          },
+          {
+            "start": 28,
+            "end": 39,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up 20% in office",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 15,
+            "end": 17,
+            "value": "20",
+            "entity": "amount"
+          },
+          {
+            "start": 22,
+            "end": 28,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "turn volume down 15%",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 16,
+            "value": "down",
+            "entity": "direction"
+          },
+          {
+            "start": 17,
+            "end": 19,
+            "value": "15",
+            "entity": "amount"
+          }
+        ]
+      },
+      {
+        "text": "turn volume up 50% in living room",
+        "intent": "volume",
+        "entities": [
+          {
+            "start": 12,
+            "end": 14,
+            "value": "up",
+            "entity": "direction"
+          },
+          {
+            "start": 15,
+            "end": 17,
+            "value": "50",
+            "entity": "amount"
+          },
+          {
+            "start": 22,
+            "end": 33,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
       }
     ],
     "entity_examples": [],

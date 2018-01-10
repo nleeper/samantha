@@ -2,6 +2,7 @@ import json
 import spotipy
 import config
 import random
+import numbers
 
 from tornado.gen import coroutine, Return
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -23,12 +24,63 @@ class Sonos(BasePlugin):
                              'resume_music': self._resume,
                              'skip_track': self._skip_track,
                              'play_album': self._play_album,
-                             'play_track': self._play_track }
+                             'play_track': self._play_track,
+                             'volume': self._set_volume }
     
     @coroutine
     def handle(self, intent, entities):
         params = self._to_params(entities)
         return self._intent_map[intent](params)
+
+    def _set_volume(self, params):
+        if not 'direction' in params:
+            raise Return(self._build_response('I don\'t know whether to turn the volume up or down. Ask again?', True))
+
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker should change the volume on?', speakers))
+
+        direction = params['direction'].lower()
+        if params['direction'] not in ['up', 'down']:
+            raise Return(self._build_response('I can only turn the volume up or down. Try asking again?', True))
+
+        del params['direction']
+
+        amount = 10
+        if 'amount' in params:
+            amount_map = { 'bit': 5, 'little': 10, 'lot': 20 }
+            amount_value = params['amount'].replace('%', '').lower()
+
+            del params['amount']
+            
+            if amount_value in amount_map:
+                amount = amount_map[amount_value]
+            elif isinstance(amount_value, numbers.Integral):
+                amount = int(amount_value)      
+
+        response = yield self._request('sonos.speaker', params)
+
+        result = response['result']
+        if result['success'] is True:
+            current_volume = result['speaker']['state'].get('volume', 0)
+            
+            if direction == 'up':
+                new_volume = current_volume + amount
+            elif direction == 'down':
+                new_volume = current_volume - amount
+
+            params['level'] = new_volume
+            vol_response = yield self._request('sonos.volume', params)
+
+            vol_result = vol_response['result']
+            if vol_result['success'] is True:
+                answer = 'I changed the volume for you!'
+            else:
+                answer = 'Oh no, I couldn\'t change the volume. Sorry :('
+        else:
+            answer = 'I couldn\'t find the speaker you wanted to change the volume on. Try again?'
+
+        raise Return(self._build_response(answer))
 
     def _skip_track(self, params):
         if not 'speaker' in params:
