@@ -3,7 +3,7 @@ from decouple import Csv
 
 PORT = config('PORT', default=8888, cast=int)
 
-NLU_CONFIG = config('NLU_CONFIG', default='config_mitie.json', cast=str)
+NLU_CONFIG = config('NLU_CONFIG', default='config_spacy.json', cast=str)
 
 NLU_LOG_DIR = config('NLU_LOG_DIR', default='logs', cast=str)
 
