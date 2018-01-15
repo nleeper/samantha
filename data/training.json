@@ -1402,6 +1402,115 @@
             "entity": "speaker"
           }
         ]
+      },
+      {
+        "text": "what is playing right now?",
+        "intent": "currently_playing",
+        "entities": []
+      },
+      {
+        "text": "what is playing in the office?",
+        "intent": "currently_playing",
+        "entities": [
+          {
+            "start": 23,
+            "end": 29,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "what's this song?",
+        "intent": "currently_playing",
+        "entities": []
+      },
+      {
+        "text": "what is this song?",
+        "intent": "currently_playing",
+        "entities": []
+      },
+      {
+        "text": "what is playing right now in the living room?",
+        "intent": "currently_playing",
+        "entities": [
+          {
+            "start": 33,
+            "end": 44,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "what is playing next in the family room?",
+        "intent": "playing_next",
+        "entities": [
+          {
+            "start": 28,
+            "end": 39,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "whats playing next in the office?",
+        "intent": "playing_next",
+        "entities": [
+          {
+            "start": 26,
+            "end": 32,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "what is playing next?",
+        "intent": "playing_next",
+        "entities": []
+      },
+      {
+        "text": "what's playing next?",
+        "intent": "playing_next",
+        "entities": []
+      },
+      {
+        "text": "what is playing next in the office?",
+        "intent": "playing_next",
+        "entities": [
+          {
+            "start": 28,
+            "end": 34,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "what is playing in the living room?",
+        "intent": "currently_playing",
+        "entities": [
+          {
+            "start": 23,
+            "end": 34,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "what is playing next in the living room?",
+        "intent": "playing_next",
+        "entities": [
+          {
+            "start": 28,
+            "end": 39,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
       }
     ],
     "entity_examples": [],

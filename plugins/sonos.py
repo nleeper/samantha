@@ -25,12 +25,72 @@ class Sonos(BasePlugin):
                              'skip_track': self._skip_track,
                              'play_album': self._play_album,
                              'play_track': self._play_track,
-                             'volume': self._set_volume }
+                             'volume': self._set_volume,
+                             'currently_playing': self._currently_playing,
+                             'playing_next': self._playing_next }
     
     @coroutine
     def handle(self, intent, entities):
         params = self._to_params(entities)
         return self._intent_map[intent](params)
+
+    def _currently_playing(self, params):
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker are you asking about?', speakers))
+
+        response = yield self._request('sonos.speaker', params)
+
+        result = response['result']
+        if result['success'] is True:
+            speaker = result['speaker']
+            state = speaker['state']
+            name = speaker['name']
+
+            playbackState = state.get('playbackState', 'STOPPED')
+            if playbackState == 'PLAYING':
+                answer = '%s by %s is currently playing on speaker %s' % (state['currentTrack']['title'], state['currentTrack']['artist'], name)
+            elif playbackState == 'STOPPED':
+                answer = 'Sorry, nothing is currently playing on speaker %s' % name
+            elif playbackState == 'PAUSED_PLAYBACK':
+                answer = 'Music is paused on speaker %s right now' % name
+        else:
+            answer = 'I couldn\'t find the speaker you asked about. Try again?'
+
+        raise Return(self._build_response(answer))        
+
+    def _playing_next(self, params):
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker are you asking about?', speakers))
+
+        response = yield self._request('sonos.speaker', params)
+
+        answer = ''
+        result = response['result']
+        if result['success'] is True:
+            speaker = result['speaker']
+            state = speaker['state']
+            name = speaker['name']
+
+            nextTrack = state.get('nextTrack', {})
+            nextTrackTitle = nextTrack.get('title', '')
+            nextTrackArtist = nextTrack.get('artist', '')
+
+            playbackState = state.get('playbackState', 'STOPPED')
+            if playbackState == 'PLAYING':
+                if nextTrackTitle != '':
+                    answer = '%s by %s is going to play next on speaker %s' % (state['nextTrack']['title'], state['nextTrack']['artist'], name)
+            elif playbackState == 'PAUSED_PLAYBACK':
+                if nextTrackTitle != '':
+                    answer = 'Music is paused on speaker %s right now, but %s by %s is going to play next' % (name, state['nextTrack']['title'], state['nextTrack']['artist'])
+
+            if answer == '':
+                answer = 'Sorry, nothing is queued to play next on speaker %s' % name
+        else:
+            answer = 'I couldn\'t find the speaker you asked about. Try again?'
+
+        raise Return(self._build_response(answer))
 
     def _set_volume(self, params):
         if not 'direction' in params:
@@ -62,7 +122,7 @@ class Sonos(BasePlugin):
 
         result = response['result']
         if result['success'] is True:
-            current_volume = result['speaker']['state'].get('volume', 0)
+            current_volume = int(result['speaker']['state'].get('volume', 0))
             
             if direction == 'up':
                 new_volume = current_volume + amount
