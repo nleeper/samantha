@@ -1511,6 +1511,150 @@
             "entity": "speaker"
           }
         ]
+      },
+      {
+        "text": "play playlist starred in the living room",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 21,
+            "value": "starred",
+            "entity": "playlist"
+          },
+          {
+            "start": 29,
+            "end": 40,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play playlist your top songs 2017 in family room",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 33,
+            "value": "your top songs 2017",
+            "entity": "playlist"
+          },
+          {
+            "start": 37,
+            "end": 48,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play playlist throwbackthursday",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 31,
+            "value": "throwbackthursday",
+            "entity": "playlist"
+          }
+        ]
+      },
+      {
+        "text": "play playlist one-hit wonders in the office",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 29,
+            "value": "one-hit wonders",
+            "entity": "playlist"
+          },
+          {
+            "start": 37,
+            "end": 43,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "can i hear playlist here comes the sun in the family room?",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 20,
+            "end": 38,
+            "value": "here comes the sun",
+            "entity": "playlist"
+          },
+          {
+            "start": 46,
+            "end": 57,
+            "value": "family room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play me playlist discover weekly",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 17,
+            "end": 32,
+            "value": "discover weekly",
+            "entity": "playlist"
+          }
+        ]
+      },
+      {
+        "text": "can I hear playlist all out 80s in the office?",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 20,
+            "end": 31,
+            "value": "all out 80s",
+            "entity": "playlist"
+          },
+          {
+            "start": 39,
+            "end": 45,
+            "value": "office",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play playlist this is: ice cube in the living room",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 31,
+            "value": "this is: ice cube",
+            "entity": "playlist"
+          },
+          {
+            "start": 39,
+            "end": 50,
+            "value": "living room",
+            "entity": "speaker"
+          }
+        ]
+      },
+      {
+        "text": "play playlist this is: the national",
+        "intent": "play_playlist",
+        "entities": [
+          {
+            "start": 14,
+            "end": 35,
+            "value": "this is: the national",
+            "entity": "playlist"
+          }
+        ]
       }
     ],
     "entity_examples": [],

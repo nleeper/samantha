@@ -24,7 +24,7 @@ class MessageParser(object):
                 for e in parsed['entities']:
                     response['entities'].append({ 'value': e['value'], 'entity': e['entity'] })
         else:
-            print('Unable to find intent with 30% confidence for message %s - %s' % (trimmed, parsed))
+            print('Unable to find intent with 30%% confidence for message \'%s\' - %s' % (trimmed, parsed))
 
         self._log(trimmed, parsed)
 
