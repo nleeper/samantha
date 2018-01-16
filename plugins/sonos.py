@@ -27,12 +27,41 @@ class Sonos(BasePlugin):
                              'play_track': self._play_track,
                              'volume': self._set_volume,
                              'currently_playing': self._currently_playing,
-                             'playing_next': self._playing_next }
+                             'playing_next': self._playing_next,
+                             'play_playlist': self._play_playlist }
     
     @coroutine
     def handle(self, intent, entities):
         params = self._to_params(entities)
         return self._intent_map[intent](params)
+
+    def _play_playlist(self, params):
+        if not 'playlist' in params:
+            raise Return(self._build_response('I don\'t know what playlist you want me to play. Try again?', True))
+
+        playlist = params['playlist']
+        del params['playlist']
+        
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % playlist.title(), speakers))
+
+        found = self._spotify.search(playlist, limit=10, type='playlist', market='US')
+        if found['playlists']['total'] > 0:
+            match = found['playlists']['items'][0]
+            params['uri'] = match['uri']
+
+            response = yield self._request('sonos.play_spotify', params)
+            
+            result = response['result']
+            if result['success'] is True:
+                answer = 'Playlist %s is playing. Enjoy!' % match['name']
+            else:
+                answer = 'I couldn\'t play the playlist you wanted. Sorry!'
+        else:
+            answer = 'I couldn\'t find the playlist %s. Try again?' % playlist.title()
+
+        raise Return(self._build_response(answer))
 
     def _currently_playing(self, params):
         if not 'speaker' in params:
