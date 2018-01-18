@@ -1,6 +1,6 @@
 import json 
 
-from clients.types import ClientTypes
+from clients.chat.types import ClientTypes
 
 import tornado.gen
 from tornado.web import RequestHandler
