@@ -1,125 +1,92 @@
-import json
-import spotipy
 import config
-import random
 import numbers
 
 from tornado.gen import coroutine, Return
-from spotipy.oauth2 import SpotifyClientCredentials
 
 from base import BasePlugin
+from clients.spotify import SpotifyClient
 
 class Sonos(BasePlugin):
     def __init__(self, manager):
         BasePlugin.__init__(self, manager)
 
-        self._spotify = spotipy.Spotify(client_credentials_manager=
-                                        SpotifyClientCredentials(client_id=config.SPOTIFY.get('CLIENT_ID'), 
-                                                                 client_secret=config.SPOTIFY.get('CLIENT_SECRET')))
+        self._spotify = SpotifyClient(config.SPOTIFY)
 
         self._intent_map = { 'play_genre': self._play_genre, 
                              'play_artist': self._play_artist, 
+                             'play_playlist': self._play_playlist,
+                             'play_album': self._play_album,
+                             'play_track': self._play_track,
                              'speaker_list': self._get_speakers,
                              'pause_music': self._pause,
                              'resume_music': self._resume,
                              'skip_track': self._skip_track,
-                             'play_album': self._play_album,
-                             'play_track': self._play_track,
                              'volume': self._set_volume,
                              'currently_playing': self._currently_playing,
-                             'playing_next': self._playing_next,
-                             'play_playlist': self._play_playlist }
+                             'playing_next': self._playing_next }
     
     @coroutine
     def handle(self, intent, entities):
         params = self._to_params(entities)
         return self._intent_map[intent](params)
 
-    def _play_playlist(self, params):
-        if not 'playlist' in params:
-            raise Return(self._build_response('I don\'t know what playlist you want me to play. Try again?', True))
-
-        playlist = params['playlist']
-        del params['playlist']
-        
-        if not 'speaker' in params:
-            speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % playlist.title(), speakers))
-
-        found = self._spotify.search(playlist, limit=10, type='playlist', market='US')
-        if found['playlists']['total'] > 0:
-            match = found['playlists']['items'][0]
-            params['uri'] = match['uri']
-
-            response = yield self._request('sonos.play_spotify', params)
-            
-            result = response['result']
-            if result['success'] is True:
-                answer = 'Playlist %s is playing. Enjoy!' % match['name']
-            else:
-                answer = 'I couldn\'t play the playlist you wanted. Sorry!'
-        else:
-            answer = 'I couldn\'t find the playlist %s. Try again?' % playlist.title()
-
-        raise Return(self._build_response(answer))
-
     def _currently_playing(self, params):
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
             raise Return(self._build_speaker_question('What speaker are you asking about?', speakers))
 
-        response = yield self._request('sonos.speaker', params)
+        answer = yield self._handle_request('sonos.speaker', 
+                                            params, 
+                                            lambda r: self._build_currently_playing_message(r['speaker']),
+                                            lambda r: 'I couldn\'t find the speaker you asked about. Try again?')
 
-        result = response['result']
-        if result['success'] is True:
-            speaker = result['speaker']
-            state = speaker['state']
-            name = speaker['name']
+        raise Return(self._build_response(answer))   
 
-            playbackState = state.get('playbackState', 'STOPPED')
-            if playbackState == 'PLAYING':
-                answer = '%s by %s is currently playing on speaker %s' % (state['currentTrack']['title'], state['currentTrack']['artist'], name)
-            elif playbackState == 'STOPPED':
-                answer = 'Sorry, nothing is currently playing on speaker %s' % name
-            elif playbackState == 'PAUSED_PLAYBACK':
-                answer = 'Music is paused on speaker %s right now' % name
-        else:
-            answer = 'I couldn\'t find the speaker you asked about. Try again?'
+    def _build_currently_playing_message(self, speaker):
+        state = speaker['state']
+        name = speaker['name']
 
-        raise Return(self._build_response(answer))        
+        playbackState = state.get('playbackState', 'STOPPED')
+        if playbackState == 'PLAYING':
+            return '\'%s\' by \'%s\' is currently playing on speaker %s' % (state['currentTrack']['title'], state['currentTrack']['artist'], name)
+        elif playbackState == 'STOPPED':
+            return 'Sorry, nothing is currently playing on speaker %s' % name
+        elif playbackState == 'PAUSED_PLAYBACK':
+            return 'Music is paused on speaker %s right now' % name 
 
     def _playing_next(self, params):
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
             raise Return(self._build_speaker_question('What speaker are you asking about?', speakers))
 
-        response = yield self._request('sonos.speaker', params)
-
-        answer = ''
-        result = response['result']
-        if result['success'] is True:
-            speaker = result['speaker']
-            state = speaker['state']
-            name = speaker['name']
-
-            nextTrack = state.get('nextTrack', {})
-            nextTrackTitle = nextTrack.get('title', '')
-            nextTrackArtist = nextTrack.get('artist', '')
-
-            playbackState = state.get('playbackState', 'STOPPED')
-            if playbackState == 'PLAYING':
-                if nextTrackTitle != '':
-                    answer = '%s by %s is going to play next on speaker %s' % (state['nextTrack']['title'], state['nextTrack']['artist'], name)
-            elif playbackState == 'PAUSED_PLAYBACK':
-                if nextTrackTitle != '':
-                    answer = 'Music is paused on speaker %s right now, but %s by %s is going to play next' % (name, state['nextTrack']['title'], state['nextTrack']['artist'])
-
-            if answer == '':
-                answer = 'Sorry, nothing is queued to play next on speaker %s' % name
-        else:
-            answer = 'I couldn\'t find the speaker you asked about. Try again?'
+        answer = yield self._handle_request('sonos.speaker', 
+                                            params, 
+                                            lambda r: self._build_playing_next_message(r['speaker']),
+                                            lambda r: 'I couldn\'t find the speaker you asked about. Try again?')
 
         raise Return(self._build_response(answer))
+
+    def _build_playing_next_message(self, speaker):
+        state = speaker['state']
+        name = speaker['name']
+
+        nextTrack = state.get('nextTrack', {})
+        nextTrackTitle = nextTrack.get('title', '')
+        nextTrackArtist = nextTrack.get('artist', '')
+
+        answer = ''
+        playbackState = state.get('playbackState', 'STOPPED')
+        if playbackState == 'PLAYING':
+            if nextTrackTitle != '':
+                answer = '\'%s\' by \'%s\' is going to play next on speaker %s' % (state['nextTrack']['title'], state['nextTrack']['artist'], name)
+        elif playbackState == 'PAUSED_PLAYBACK':
+            if nextTrackTitle != '':
+                answer = 'Music is paused on speaker %s right now, but \'%s\' by \'%s\' is going to play next' % (name, state['nextTrack']['title'], state['nextTrack']['artist'])
+
+        if answer == '':
+            answer = 'Sorry, nothing is queued to play next on speaker %s' % name
+
+        return answer
 
     def _set_volume(self, params):
         if not 'direction' in params:
@@ -176,13 +143,10 @@ class Sonos(BasePlugin):
             speakers = yield self._speaker_list()
             raise Return(self._build_speaker_question('What speaker should I skip to the next song on?', speakers))
 
-        response = yield self._request('sonos.next', params)
-
-        result = response['result']
-        if result['success'] is True:
-            answer = 'Skipped ahead to the next song!'
-        else:
-            answer = 'I was unable to skip this song. Sorry :('
+        answer = yield self._handle_request('sonos.next',
+                                            params,
+                                            lambda r: 'Skipped ahead to the next song',
+                                            lambda r: 'I was unable to skip this song. Sorry :(')
 
         raise Return(self._build_response(answer))
 
@@ -191,13 +155,10 @@ class Sonos(BasePlugin):
             speakers = yield self._speaker_list()
             raise Return(self._build_speaker_question('What speaker should I resume playing?', speakers))
 
-        response = yield self._request('sonos.play', params)
-
-        result = response['result']
-        if result['success'] is True:
-            answer = 'Music is now playing :)'
-        else:
-            answer = 'I was unable to resume playing music. Sorry :('
+        answer = yield self._handle_request('sonos.play',
+                                            params,
+                                            lambda r: 'Music is now playing :)',
+                                            lambda r: 'I was unable to resume playing music. Sorry :(')
 
         raise Return(self._build_response(answer))
 
@@ -206,13 +167,10 @@ class Sonos(BasePlugin):
             speakers = yield self._speaker_list()
             raise Return(self._build_speaker_question('What speaker should I pause?', speakers))
 
-        response = yield self._request('sonos.pause', params)
-
-        result = response['result']
-        if result['success'] is True:
-            answer = 'The music has been paused.'
-        else:
-            answer = 'I was unable to pause the music. Sorry :('
+        answer = yield self._handle_request('sonos.pause',
+                                            params,
+                                            lambda r: 'The music has been paused.',
+                                            lambda r: 'I was unable to pause the music. Sorry :(')
 
         raise Return(self._build_response(answer))
 
@@ -225,25 +183,40 @@ class Sonos(BasePlugin):
 
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % genre.title(), speakers))
+            raise Return(self._build_speaker_question('What speaker do you want me to play genre \'%s\' on?' % genre.title(), speakers))
 
-        found = self._spotify.search(genre, limit=50, type='playlist', market='US')
-        if found['playlists']['total'] > 0:
-            count = len(found['playlists']['items'])
-            item_no = random.randint(0, count - 1)
+        found = self._spotify.find_random_playlist_for_genre(genre)
+        if found is not None:
+            params['uri'] = found['uri']
 
-            match = found['playlists']['items'][item_no]
-            params['uri'] = match['uri']
-
-            response = yield self._request('sonos.play_spotify', params)
-
-            result = response['result']
-            if result['success'] is True:
-                answer = 'The playlist \'%s\' is now playing. Hope you like it!' % match['name']
-            else:
-                answer = 'I couldn\'t play the genre you wanted. Sorry!'
+            answer = yield self._play_spotify(params,
+                                              'The playlist \'%s\' is now playing. Hope you like it!' % found['name'],
+                                              'I couldn\'t play the genre you wanted. Sorry!')
         else:
-            answer = 'I couldn\'t find any playlists for genre %s. Try again?' % genre.title()
+            answer = 'I couldn\'t find any playlists for genre \'%s\'. Try again?' % genre.title()
+
+        raise Return(self._build_response(answer))
+
+    def _play_playlist(self, params):
+        if not 'playlist' in params:
+            raise Return(self._build_response('I don\'t know what playlist you want me to play. Try again?', True))
+
+        playlist = params['playlist']
+        del params['playlist']
+        
+        if not 'speaker' in params:
+            speakers = yield self._speaker_list()
+            raise Return(self._build_speaker_question('What speaker do you want me to play playlist \'%s\' on?' % playlist.title(), speakers))
+
+        found = self._spotify.find_playlist(playlist)
+        if found is not None:
+            params['uri'] = found['uri']
+
+            answer = yield self._play_spotify(params,
+                                              'Playlist \'%s\' is playing. Enjoy!' % found['name'],
+                                              'I couldn\'t play the playlist you wanted. Sorry!')
+        else:
+            answer = 'I couldn\'t find the playlist \'%s\'. Try again?' % playlist.title()
 
         raise Return(self._build_response(answer))
 
@@ -262,22 +235,17 @@ class Sonos(BasePlugin):
 
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % album.title(), speakers))
+            raise Return(self._build_speaker_question('What speaker do you want me to play album \'%s\' on?' % album.title(), speakers))
 
-        found = self._spotify.search('album:%s artist:%s' % (album, artist), limit=10, type='album', market='us')
-        if found['albums']['total'] > 0:
-            match = found['albums']['items'][0]
-            params['uri'] = match['uri']
+        found = self._spotify.find_album_by_artist(album, artist)
+        if found is not None:
+            params['uri'] = found['uri']
 
-            response = yield self._request('sonos.play_spotify', params)
-
-            result = response['result']
-            if result['success'] is True:
-                answer = 'Your album %s is playing. Enjoy!' % match['name']
-            else:
-                answer = 'I couldn\'t play the album you wanted. Sorry!'
+            answer = yield self._play_spotify(params,
+                                              'Your album \'%s\' is playing. Enjoy!' % found['name'],
+                                              'I couldn\'t play the album you wanted. Sorry!')
         else:
-            answer = 'I couldn\'t find the album %s by artist %s. Try again?' % (album.title(), artist.title())
+            answer = 'I couldn\'t find the album \'%s\' by artist \'%s\'. Try again?' % (album.title(), artist.title())
 
         raise Return(self._build_response(answer))
 
@@ -296,22 +264,17 @@ class Sonos(BasePlugin):
 
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % track.title(), speakers))
+            raise Return(self._build_speaker_question('What speaker do you want me to play track \'%s\' on?' % track.title(), speakers))
 
-        found = self._spotify.search('track:%s artist:%s' % (track, artist), limit=10, type='track', market='us')
-        if found['tracks']['total'] > 0:
-            match = found['tracks']['items'][0]
-            params['uri'] = match['uri']
+        found = self._spotify.find_track_by_artist(track, artist)
+        if found is not None:
+            params['uri'] = found['uri']
 
-            response = yield self._request('sonos.play_spotify', params)
-
-            result = response['result']
-            if result['success'] is True:
-                answer = 'Your song %s is playing. Enjoy!' % match['name']
-            else:
-                answer = 'I couldn\'t play the song you wanted. Sorry!'
+            answer = yield self._play_spotify(params,
+                                              'Your song \'%s\' is playing. Enjoy!' % found['name'],
+                                              'I couldn\'t play the song you wanted. Sorry!')
         else:
-            answer = 'I couldn\'t find the song %s by artist %s. Try again?' % (track.title(), artist.title())
+            answer = 'I couldn\'t find the song \'%s\' by artist \'%s\'. Try again?' % (track.title(), artist.title())
 
         raise Return(self._build_response(answer))
 
@@ -324,22 +287,17 @@ class Sonos(BasePlugin):
         
         if not 'speaker' in params:
             speakers = yield self._speaker_list()
-            raise Return(self._build_speaker_question('What speaker do you want me to play %s on?' % artist.title(), speakers))
+            raise Return(self._build_speaker_question('What speaker do you want me to play music by artist \'%s\' on?' % artist.title(), speakers))
 
-        found = self._spotify.search(artist, limit=10, type='artist', market='US')
-        if found['artists']['total'] > 0:
-            match = found['artists']['items'][0]
-            params['uri'] = 'spotify:artistTopTracks:%s' % match['id']
+        found = self._spotify.find_artist(artist)
+        if found is not None:
+            params['uri'] = 'spotify:artistTopTracks:%s' % found['id']
 
-            response = yield self._request('sonos.play_spotify', params)
-            
-            result = response['result']
-            if result['success'] is True:
-                answer = 'Songs by artist %s is playing. Enjoy!' % match['name']
-            else:
-                answer = 'I couldn\'t play the artist you wanted. Sorry!'
+            answer = yield self._play_spotify(params,
+                                              'Music by artist \'%s\' is playing. Enjoy!' % found['name'],
+                                              'I couldn\'t play the artist you wanted. Sorry!')
         else:
-            answer = 'I couldn\'t find the artist %s. Try again?' % artist.title()
+            answer = 'I couldn\'t find the artist \'%s\'. Try again?' % artist.title()
 
         raise Return(self._build_response(answer))
 
@@ -356,11 +314,21 @@ class Sonos(BasePlugin):
         return self._build_question(question, 'speaker', choices=choices)
 
     @coroutine
-    def _speaker_list(self):
-        response = yield self._request('sonos.speakers', {})
+    def _handle_request(self, method, params, success_func, fail_func):
+        response = yield self._request(method, params)
 
         result = response['result']
         if result['success'] is True:
-            raise Return(result['speakers'])
+            raise Return(success_func(result))
         else:
-            raise Return([])
+            raise Return(fail_func(result))
+
+    @coroutine
+    def _play_spotify(self, params, success, fail):
+        answer = yield self._handle_request('sonos.play_spotify', params, lambda r: success, lambda r: fail)
+        raise Return(answer)
+
+    @coroutine
+    def _speaker_list(self):
+        speakers = yield self._handle_request('sonos.speakers', {}, lambda r: r['speakers'], lambda r: [])
+        raise Return(speakers)

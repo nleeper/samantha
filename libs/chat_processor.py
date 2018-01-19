@@ -7,8 +7,8 @@ import config
 
 from libs.message_parser import MessageParser
 
-from clients.types import ClientTypes
-from clients.facebook import FacebookMessenger
+from clients.chat.types import ClientTypes
+from clients.chat.facebook import FacebookMessenger
 
 class ChatProcessor(object):
     def __init__(self, plugin_manager):
