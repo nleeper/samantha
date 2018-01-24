@@ -4,7 +4,6 @@ import tornado.ioloop
 import tornado.web
 
 from application import WebApplication
-from clients.facebook import FacebookMessenger
 
 # Start server
 if __name__ == '__main__':
