@@ -1,11 +1,25 @@
 from setuptools import setup, find_packages
 from setuptools.command.install import install
+from setuptools.command.develop import develop
+
+def install_spacy():
+    try:
+        import spacy
+        spacy.load('en')
+    except Exception:
+        import subprocess
+        args = ['python -m spacy download en']
+        subprocess.call(args, shell=True)
 
 class DownloadSpacy(install):
     def run(self):
         install.do_egg_install(self)
-        import spacy
-        spacy.cli.download('download', 'en')
+        install_spacy()
+
+class DownloadSpacyDevelop(develop):
+    def run(self):
+        develop.run(self)
+        install_spacy()
 
 INSTALL_REQUIRES = [
     'rasa-nlu==0.10.6',
@@ -32,7 +46,8 @@ TESTS_REQUIRE = [
 ]
 
 CMDCLASS = {
-    'install': DownloadSpacy
+    'install': DownloadSpacy,
+    'develop': DownloadSpacyDevelop
 }
 
 setup(
