@@ -17,14 +17,15 @@ class MessageParser(object):
         response = { 'original': trimmed, 'intent': None, 'entities': [] }
 
         parsed = self._interpreter.parse(trimmed)
-        if parsed['intent'].get('confidence', 0.00) > 0.30:
+        if parsed['intent'].get('confidence', 0.00) > config.MIN_PARSE_CONFIDENCE:
+            print(parsed['intent'])
             response['intent'] = parsed['intent'].get('name', '')
 
             if len(parsed['entities']) > 0:
                 for e in parsed['entities']:
                     response['entities'].append({ 'value': e['value'], 'entity': e['entity'] })
         else:
-            print('Unable to find intent with 30%% confidence for message \'%s\' - %s' % (trimmed, parsed))
+            print('Unable to find intent with %s%% confidence for message \'%s\' - %s' % (int(config.MIN_PARSE_CONFIDENCE * 100), trimmed, parsed))
 
         self._log(trimmed, parsed)
 
