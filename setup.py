@@ -42,7 +42,9 @@ SETUP_REQUIRES = [
 
 TESTS_REQUIRE = [
     'pytest',
-    'mock'
+    'coverage',
+    'mock',
+    'pytest-cov'
 ]
 
 CMDCLASS = {
