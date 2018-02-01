@@ -1,8 +1,8 @@
 import tornado.web
 
 from libs.chat_processor import ChatProcessor
-from libs.pipeline_manager import PipelineManager
 from libs.plugin_manager import PluginManager
+from libs.pipeline_manager import PipelineManager
 
 from handlers.facebook import FacebookHandler
 from handlers.pipeline import PipelineHandler
