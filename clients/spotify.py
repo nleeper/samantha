@@ -1,12 +1,11 @@
-
 import random
-import spotipy
 
+from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
 
 class SpotifyClient(object):
     def __init__(self, options):
-        self._spotipy = spotipy.Spotify(client_credentials_manager=
+        self._spotipy = Spotify(client_credentials_manager=
                                         SpotifyClientCredentials(client_id=options.get('CLIENT_ID'), 
                                                                  client_secret=options.get('CLIENT_SECRET')))
 

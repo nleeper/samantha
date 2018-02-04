@@ -1,4 +1,4 @@
-import tornado.web
+from tornado.web import Application
 
 from libs.chat_processor import ChatProcessor
 from libs.plugin_manager import PluginManager
@@ -7,7 +7,7 @@ from libs.pipeline_manager import PipelineManager
 from handlers.facebook import FacebookHandler
 from handlers.pipeline import PipelineHandler
 
-class WebApplication(tornado.web.Application):
+class WebApplication(Application):
     def __init__(self):
         self._pipeline_manager = PipelineManager()
         self._plugin_manager = PluginManager(self._pipeline_manager)
@@ -18,7 +18,7 @@ class WebApplication(tornado.web.Application):
             (r'/facebook', FacebookHandler)
         ]
 
-        tornado.web.Application.__init__(self, routes_handlers)
+        Application.__init__(self, routes_handlers)
 
     def initialize(self):
         self.chat_processor.initialize()

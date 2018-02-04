@@ -11,7 +11,7 @@ class FacebookMessenger(object):
         return sender_id in self._valid_sender_ids
 
     def subscribe(self):
-        return requests.post('{0}/me/subscribed_apps'.format(self._graph_url), { 'access_token': self._access_token })
+        return requests.post('{0}/me/subscribed_apps'.format(self._graph_url), params = { 'access_token': self._access_token })
 
     def match_verify_token(self, passed_verify_token):
         return self._verify_token == passed_verify_token

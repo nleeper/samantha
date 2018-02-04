@@ -1,25 +1,31 @@
-from mock import patch
-from pytest_mock import mocker
+from base import BaseTestCase
 
 from handlers.facebook import FacebookHandler
 from handlers.pipeline import PipelineHandler
 
 from application import WebApplication
 
-@patch('application.tornado.web.Application.__init__')
-@patch('application.ChatProcessor')
-@patch('application.PluginManager')
-@patch('application.PipelineManager')
-def test_application_setup(pipeline_mgr, plugin_mgr, chat_processor, tornado_web_app):
-    app = WebApplication()
+class TestApplication(BaseTestCase):
 
-    assert app.pipeline is pipeline_mgr
+    def setUp(self):
+        self.pipeline_mock = self.mock('application.PipelineManager')
+        self.plugin_mock = self.mock('application.PluginManager')
+        self.chat_mock = self.mock('application.ChatProcessor')
+        self.tornado_mock = self.mock('application.Application.__init__')
 
-    pipeline_mgr.assert_called_once()
-    plugin_mgr.assert_called_once_with(app._pipeline_manager)
-    chat_processor.assert_called_once_with(app._plugin_manager)
+        self.app = WebApplication()
 
-    tornado_web_app.assert_called_once_with(app, [(r'/ws/pipeline', PipelineHandler), (r'/facebook', FacebookHandler)])
+    def testConstructor(self):
+        self.assertEqual(self.app.pipeline, self.pipeline_mock.return_value)
+        self.assertEqual(self.app.chat_processor, self.chat_mock.return_value)
+        self.assertEqual(self.app.plugins, self.plugin_mock.return_value)
 
-def test_initialize():
-    pass
+        self.pipeline_mock.assert_called_once()
+        self.plugin_mock.assert_called_once_with(self.app.pipeline)
+        self.chat_mock.assert_called_once_with(self.app.plugins)
+
+        self.tornado_mock.assert_called_once_with(self.app, [(r'/ws/pipeline', PipelineHandler), (r'/facebook', FacebookHandler)])
+
+    def testInitialize(self):
+        self.app.initialize()
+        self.chat_mock.assert_called_once()
