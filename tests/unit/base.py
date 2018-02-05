@@ -27,3 +27,4 @@ class BaseTestCase(TestCase):
     def mock(self, path):
         p = patch(path)
         self.patches.append(p)
+        return p.start()
