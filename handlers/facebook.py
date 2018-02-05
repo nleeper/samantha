@@ -39,8 +39,6 @@ class FacebookHandler(RequestHandler):
                             entries.append(dict(client_type=client_type, recipient_id=sender_id, message=text))
                     else:
                         print 'Invalid sender id %s, skipping message' % sender_id
-                else:
-                    pass
 
         yield self.application.chat_processor.queue(entries)
 

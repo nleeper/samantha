@@ -15,7 +15,7 @@ class TestApplication(BaseTestCase):
 
         self.app = WebApplication()
 
-    def testConstructor(self):
+    def test_constructor(self):
         self.assertEqual(self.app.pipeline, self.pipeline_mock.return_value)
         self.assertEqual(self.app.chat_processor, self.chat_mock.return_value)
         self.assertEqual(self.app.plugins, self.plugin_mock.return_value)
@@ -26,6 +26,6 @@ class TestApplication(BaseTestCase):
 
         self.tornado_mock.assert_called_once_with(self.app, [(r'/ws/pipeline', PipelineHandler), (r'/facebook', FacebookHandler)])
 
-    def testInitialize(self):
+    def test_initialize(self):
         self.app.initialize()
         self.chat_mock.assert_called_once()

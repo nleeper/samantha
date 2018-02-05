@@ -19,13 +19,13 @@ class TestSpotifyClient(BaseTestCase):
 
         self.spotify = SpotifyClient(self.default_opts)
 
-    def testConstructor(self):
+    def test_constructor(self):
         self.client_creds_mock.assert_called_once_with(client_id=self.default_opts.get('CLIENT_ID'),
                                                        client_secret=self.default_opts.get('CLIENT_SECRET'))
 
         self.spotipy_mock.assert_called_once_with(client_credentials_manager=self.client_creds_mock.return_value)
 
-    def testFindArtist(self):
+    def test_find_artist(self):
         artist = 'Elvis Presley'
         result = { 'name': artist }
 
@@ -37,7 +37,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(artist, limit=10, type='artist', market='US')
         self.assertEqual(found_artist, result)
 
-    def testFindArtistReturnNoneIfNoMatch(self):
+    def test_find_artist_return_none_if_no_match(self):
         artist = 'The Beatles'
 
         results = { 'artists': { 'total': 0, 'items': [] } }
@@ -48,7 +48,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(artist, limit=10, type='artist', market='US')
         self.assertIsNone(found_artist)
 
-    def testFindTrackByArtist(self):
+    def test_find_track_by_artist(self):
         track = 'Suspicious Minds'
         artist = 'Elvis Presley'
         result = { 'name': track, 'artist': artist }
@@ -61,7 +61,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with('track:%s artist:%s' % (track, artist), limit=10, type='track', market='US')
         self.assertEqual(found_track, result)
 
-    def testFindTrackByArtistReturnNoneIfNoMatch(self):
+    def test_find_track_by_artist_return_none_if_no_match(self):
         track = 'Yellow Submarine'
         artist = 'The Beatles'
 
@@ -73,7 +73,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with('track:%s artist:%s' % (track, artist), limit=10, type='track', market='US')
         self.assertIsNone(found_track)
 
-    def testFindAlbumByArtist(self):
+    def test_find_album_by_artist(self):
         album = 'Elvis Now'
         artist = 'Elvis Presley'
         result = { 'name': album, 'artist': artist }
@@ -86,7 +86,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with('album:%s artist:%s' % (album, artist), limit=10, type='album', market='US')
         self.assertEqual(found_album, result)
 
-    def testFindAlbumByArtistReturnNoneIfNoMatch(self):
+    def test_find_album_by_artist_return_none_if_no_match(self):
         album = 'Abbey Road'
         artist = 'The Beatles'
 
@@ -98,7 +98,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with('album:%s artist:%s' % (album, artist), limit=10, type='album', market='US')
         self.assertIsNone(found_album)
 
-    def testFindPlaylist(self):
+    def test_find_playlist(self):
         playlist = 'ThrowbackThursday'
         result = { 'name': playlist }
 
@@ -110,7 +110,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(playlist, limit=10, type='playlist', market='US')
         self.assertEqual(found_playlist, result)
 
-    def testFindPlaylistReturnNoneIfNoMatch(self):
+    def test_find_playlist_return_none_if_no_match(self):
         playlist = 'Celebrate'
 
         results = { 'playlists': { 'total': 0, 'items': [] } }
@@ -121,7 +121,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(playlist, limit=10, type='playlist', market='US')
         self.assertIsNone(found_playlist)
 
-    def testFindRandomPlaylistForGenre(self):
+    def test_find_random_playlist_from_genre(self):
         genre = 'Pop'
         result = { 'name': 'The best Pop playlist' }
 
@@ -136,7 +136,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(genre, limit=50, type='playlist', market='US')
         self.assertEqual(found_playlist, result)
 
-    def testFindRandomPlaylistForGenreReturnNoneIfNoMatch(self):
+    def test_find_random_playlist_from_genre_return_none_if_no_match(self):
         genre = 'Christmas'
 
         results = { 'playlists': { 'total': 0, 'items': [] } }
@@ -147,7 +147,7 @@ class TestSpotifyClient(BaseTestCase):
         self.search_mock.assert_called_once_with(genre, limit=50, type='playlist', market='US')
         self.assertIsNone(found_playlist)
 
-    def testSearch(self):
+    def test_search(self):
         term = 'Mine'
         search_type = 'artist'
 

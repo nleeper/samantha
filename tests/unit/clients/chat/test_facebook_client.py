@@ -17,12 +17,12 @@ class TestFacebookClient(BaseTestCase):
 
         self.messenger = FacebookMessenger(self.default_opts)
 
-    def testConstructor(self):
+    def test_constructor(self):
         self.assertEqual(self.messenger._access_token, self.default_opts.get('PAGE_ACCESS_TOKEN'))
         self.assertEqual(self.messenger._verify_token, self.default_opts.get('VERIFY_TOKEN'))
         self.assertEqual(self.messenger._valid_sender_ids, self.default_opts.get('VALID_SENDER_IDS'))
 
-    def testConstructorUsesDefaults(self):
+    def test_constructor_uses_defaults(self):
         default_messenger = FacebookMessenger({})
 
         self.assertEqual(default_messenger._access_token, '')
@@ -30,21 +30,21 @@ class TestFacebookClient(BaseTestCase):
         self.assertEqual(default_messenger._valid_sender_ids, [])
         self.assertEqual(default_messenger._graph_url, 'https://graph.facebook.com/v2.6')
 
-    def testIsValidSender(self):
+    def test_is_valid_sender(self):
         invalid_sender_id = 'id3'
 
         self.assertTrue(self.messenger.is_valid_sender(self.valid_sender_id))
         self.assertFalse(self.messenger.is_valid_sender(invalid_sender_id))
 
-    def testSubscribe(self):
+    def test_subscribe(self):
         self.messenger.subscribe()
         self.post_mock.assert_called_once_with('{0}/me/subscribed_apps'.format(self.messenger._graph_url), 
                                                params = { 'access_token': self.messenger._access_token })
 
-    def testMatchVerifyToken(self):
+    def test_match_verify_token(self):
         self.assertTrue(self.messenger.match_verify_token('verify_token'))
 
-    def testSendTextMessage(self):
+    def test_send_text_message(self):
         recipient_id = 'rec1'
         message = 'text'
 
@@ -63,7 +63,7 @@ class TestFacebookClient(BaseTestCase):
         json_mock.assert_called_once()
         
     
-    def testSendChoicesMessage(self):
+    def test_send_choices_message(self):
         recipient_id = 'rec2'
         message = 'choices'
         choices = [{ 'key': 1, 'value': 'test' }, { 'key': 2, 'value': 'test2' }]
