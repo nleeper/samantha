@@ -1,6 +1,5 @@
 from mock import MagicMock
 
-from tornado.concurrent import Future
 from tornado import gen
 from tornado.testing import AsyncHTTPTestCase, gen_test
 from tornado.web import Application

@@ -6,6 +6,7 @@ from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
 
+from clients.chat.types import ClientTypes
 from handlers.facebook import FacebookHandler
 from libs.chat_processor import ChatProcessor
 
@@ -33,7 +34,7 @@ class TestFacebookhandler(AsyncHTTPTestCase):
             method='GET',
             follow_redirects=False)
 
-        self.chat_mock.verify_client.assert_called_once_with(1, hub_token)
+        self.chat_mock.verify_client.assert_called_once_with(ClientTypes.FACEBOOK, hub_token)
 
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, hub_challenge)
@@ -49,7 +50,7 @@ class TestFacebookhandler(AsyncHTTPTestCase):
             method='GET',
             follow_redirects=False)
 
-        self.chat_mock.verify_client.assert_called_once_with(1, hub_token)
+        self.chat_mock.verify_client.assert_called_once_with(ClientTypes.FACEBOOK, hub_token)
 
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, 'Invalid verification token')
@@ -86,8 +87,8 @@ class TestFacebookhandler(AsyncHTTPTestCase):
             body=json.dumps(message_obj),
             follow_redirects=False)
 
-        self.chat_mock.queue.assert_called_once_with([dict(client_type=1, recipient_id=sender_id, message=message)])
-        self.chat_mock.is_valid_sender.assert_called_once_with(1, sender_id)
+        self.chat_mock.queue.assert_called_once_with([dict(client_type=ClientTypes.FACEBOOK, recipient_id=sender_id, message=message)])
+        self.chat_mock.is_valid_sender.assert_called_once_with(ClientTypes.FACEBOOK, sender_id)
 
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, 'Success')
@@ -125,7 +126,7 @@ class TestFacebookhandler(AsyncHTTPTestCase):
             follow_redirects=False)
 
         self.chat_mock.queue.assert_called_once_with([])
-        self.chat_mock.is_valid_sender.assert_called_once_with(1, sender_id)
+        self.chat_mock.is_valid_sender.assert_called_once_with(ClientTypes.FACEBOOK, sender_id)
 
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, 'Success')
@@ -199,8 +200,8 @@ class TestFacebookhandler(AsyncHTTPTestCase):
             body=json.dumps(message_obj),
             follow_redirects=False)
 
-        self.chat_mock.queue.assert_called_once_with([dict(client_type=1, recipient_id=sender_id, message=message)])
-        self.chat_mock.is_valid_sender.assert_called_once_with(1, sender_id)
+        self.chat_mock.queue.assert_called_once_with([dict(client_type=ClientTypes.FACEBOOK, recipient_id=sender_id, message=message)])
+        self.chat_mock.is_valid_sender.assert_called_once_with(ClientTypes.FACEBOOK, sender_id)
 
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, 'Success')
