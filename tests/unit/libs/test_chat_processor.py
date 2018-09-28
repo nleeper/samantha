@@ -63,15 +63,28 @@ class TestChatProcessor(BaseAsyncTestCase):
 
     @gen_test
     def test_queue(self):
-        data = {}
-        put_response = {}
-        queue_future = Future()
+        data = dict(test='test')
 
+        queue_future = Future()
+        queue_future.set_result({})
+        
         put_mock = Mock(return_value=queue_future)
         self.queue_mock.return_value.put = put_mock
-        queue_future.set_result(put_response)
 
-        response = yield self.chat_processor.queue(data)
+        yield self.chat_processor.queue(data)
 
         put_mock.assert_called_once_with(data)
-        # self.assertEqual(response, put_response)
+
+    @gen_test
+    def test_process_entries(self):
+        message = 'this is a test message'
+        entries = [dict(client_type=1, recipient_id='12345', message=message)]
+        parsed_message = dict(intent='play_music', entities=dict(artist='Elvis', speaker='Family Room'))
+
+        parse_mock = Mock(return_value=parsed_message)
+        self.msg_parser_mock.return_value.parse = parse_mock
+
+        yield self.chat_processor.process_entries(entries)
+
+        parse_mock.assert_called_once_with(message)
+

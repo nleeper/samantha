@@ -40,32 +40,36 @@ class ChatProcessor(object):
     def process(self):
         while True:
             entries = yield self._queue.get()
-            for entry in entries:
-                conversation_id = self._build_conversation_id(entry)
+            self.process_entries(entries)
 
-                if conversation_id in self._pending_questions:
-                    question = self._pending_questions[conversation_id]
-                    del self._pending_questions[conversation_id]
+    @tornado.gen.coroutine
+    def process_entries(self, entries):
+        for entry in entries:
+            conversation_id = self._build_conversation_id(entry)
 
-                    intent = question['intent']
-                    entities = question['entities']
+            if conversation_id in self._pending_questions:
+                question = self._pending_questions[conversation_id]
+                del self._pending_questions[conversation_id]
 
-                    entities.append({ 'entity': question['question_entity'], 'value': entry['message'] })
-                else:
-                    parsed_message = self._message_parser.parse(entry['message'])
+                intent = question['intent']
+                entities = question['entities']
 
-                    intent = parsed_message['intent']
-                    entities = parsed_message['entities']
+                entities.append({ 'entity': question['question_entity'], 'value': entry['message'] })
+            else:
+                parsed_message = self._message_parser.parse(entry['message'])
 
-                response = yield self._plugin_manager.handle(intent, entities)
-                if response['type'] == 'question':
-                    self._pending_questions[conversation_id] = { 'intent': intent, 'entities': entities, 'question_entity': response['question_entity'] }
-                    
-                    if 'choices' in response:
-                        self._send_choices_response(entry, response['message'], response['choices'])
-                        continue
+                intent = parsed_message['intent']
+                entities = parsed_message['entities']
+
+            response = yield self._plugin_manager.handle(intent, entities)
+            if response['type'] == 'question':
+                self._pending_questions[conversation_id] = { 'intent': intent, 'entities': entities, 'question_entity': response['question_entity'] }
                 
-                self._send_response(entry, response['message'])
+                if 'choices' in response:
+                    self._send_choices_response(entry, response['message'], response['choices'])
+                    continue
+            
+            self._send_response(entry, response['message'])
 
     def _send_response(self, entry, response):
         self._clients[entry['client_type']].send_text_message(entry['recipient_id'], response)

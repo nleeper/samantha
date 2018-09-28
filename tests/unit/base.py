@@ -21,10 +21,12 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         self.patches = []
+        super(BaseTestCase, self).setUp()
 
     def tearDown(self):
         for p in self.patches:
             p.stop()
+        super(BaseTestCase, self).tearDown()
         
     def mock(self, path):
         p = patch(path)
